@@ -1,26 +1,63 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="wrapper">
+    <header class="header">Header</header>
+    <AsideLinks/>
+    <main class="main">
+      Main
+    </main>
+  </div>
+  
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import axios from 'axios'
+import AsideLinks from '@/components/AsideLinks.vue'
 
 export default {
+  components: { AsideLinks },
   name: 'App',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      characters: []
+    }
+  },
+  async mounted() {
+    const response = await axios.get('https://breakingbadapi.com/api/characters');
+    this.characters = response.data;
+    console.log(this.characters[0].name);
   }
 }
 </script>
 
 <style>
+
+html {
+  height: 100vh;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  
 }
+
+#wrapper {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.header {
+  grid-column: span 12;
+}
+
+.aside {
+  grid-column: span 4;
+}
+
+.main {
+  grid-column: span 8;
+}
+
 </style>
