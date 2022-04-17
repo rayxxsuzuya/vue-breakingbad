@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import MainHeader from '@/components/MainHeader.vue'
 import AsideLinks from '@/components/AsideLinks.vue'
 import CharacterMain from '@/components/CharacterMain.vue'
@@ -22,14 +21,11 @@ export default {
   name: 'App',
   data() {
     return {
-      characters: []
     }
   },
-  async mounted() {
-    const response = await axios.get('https://breakingbadapi.com/api/characters')
-    this.characters = response.data
-    console.log(this.characters[0].char_id)
-  }
+  mounted() {
+  this.$store.dispatch('GET_CHARACTERS');
+	},
 }
 </script>
 

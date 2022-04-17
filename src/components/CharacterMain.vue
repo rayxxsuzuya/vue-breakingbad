@@ -1,42 +1,45 @@
 <template>
 	<main class="main">
 		<div class="main-card">
-			<pre>
-				<h1 style="font-size: 15px">{{ this.$route }}</h1>
-			</pre>
-			<img class="main-photo" :src="`${currentCharacter.img}`" alt="">
-			<p class="main-name">Имя: {{ currentCharacter.name }}</p>
-			<p class="main-birthday">Дата рождения: {{ currentCharacterBirthday == 'Unknown' ? 'Неизвестно' : currentCharacterBirthday }}</p>
+			<div class="main__list" v-for="item in CHARACTERS" :key="item.char_id">
+				<div class="main__item" v-show="item.char_id == (id)">
+						<img class="main__photo" :src="`${item.img}`" alt="">
+						<p class="main__name">Имя: {{ item.name }}</p>
+						<p class="main__name">Дата рождения: {{ birthday || '' }}</p>
+				</div>
+			</div>
+			
 		</div>
 	</main>
 	
 </template>
 
 <script>
+	import {mapGetters} from 'vuex';
 
 export default {
 
 	name: 'CharacterMain',
-	props: {
-		mainlist: Array
-	},
+
 	data() {
 		return {
-			id: this.$route.params['id'],
+			id: this.$route.params.id,
 		}
 	},
 	computed: {
-		currentCharacter() {
-			return this.mainlist[this.id - 1];
-		},
-		currentCharacterBirthday() {
-			return this.currentCharacter.birthday.replaceAll('-', '.')
+		...mapGetters(['CHARACTERS']),
+		birthday() {
+			const birth = this.CHARACTERS[this.id - 1].birthday.split('-').join('.')
+			return birth == 'Unknown' ? 'Неизвестно' : birth || '';
 		}
 	},
 	watch: {
 		$route(toRoute) {
-			this.id = toRoute.params.id
-		}
+			this.id = toRoute.params.id;
+		},
+	},
+	mounted() {
+  this.$store.dispatch('GET_CHARACTERS');
 	},
 }
 </script>
@@ -49,10 +52,10 @@ $main-color: #42b883;
 	padding: 30px;
   width: calc(100% - 400px);
 	height: calc(100% - 66px);
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 
-.main-photo {
+.main__photo {
 	max-width: 200px;
 	width: 100%;
 }

@@ -1,7 +1,7 @@
 <template>
 	<aside class="aside">
 		<ul class="aside__list">
-			<li class="aside__item" v-for="item in mainlist" :key="item.char_id">
+			<li class="aside__item" v-for="item in CHARACTERS" :key="item.char_id">
 				<router-link class="aside__link" :to="`/character/${item.char_id}`">{{ item.name }}</router-link>
 			</li>
 		</ul>
@@ -9,11 +9,16 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex';
+
 export default {
 	name: 'AsideLinks',
-	props: {
-		mainlist: Array
-	}
+	computed: {
+		...mapGetters(['CHARACTERS'])
+	},
+	mounted() {
+		this.$store.dispatch('GET_CHARACTERS');
+	}	
 }
 </script>
 
@@ -25,7 +30,7 @@ $main-color: #42b883;
 	border-right: 2px solid $main-color;
 	height: calc(100% - 66px);
 	width: 400px;
-	overflow-y: scroll;
+	overflow-y: auto;
 
 	&__list {
 		list-style: none;
